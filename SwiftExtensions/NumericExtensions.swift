@@ -20,7 +20,7 @@ extension Numeric where Self: Comparable {
         return self > min && self < max
     }
     
-    func absoluteValue() -> Self {
+    var absoluteValue: Self {
         if self < 0 {
             return self * -1
         }

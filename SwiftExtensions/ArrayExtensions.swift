@@ -8,13 +8,23 @@
 import Foundation
 
 extension Array {
+    func merged<T>() -> Array<T>  where Element == Array<T> {
+        var arr: [T] = []
+        
+        for arrElement in self {
+            arr.append(contentsOf: arrElement)
+        }
+        
+        return arr
+    }
+    
     mutating func append(_ newElement: Element, max: Int) {
         self.append(newElement)
         self = subArray(last: max)
     }
     
     mutating func trim(_ startIndex: Int, _ endIndex: Int) {
-        self = subArray(startIndex, startIndex)
+        self = subArray(startIndex, endIndex)
     }
     
     func first(_ i: Int) -> [Element] { return self.subArray(first: i) }
@@ -61,29 +71,29 @@ extension Array {
 }
 
 extension Array where Element: Equatable {
-    mutating func remove(object: Element) -> Bool {
-        if let index = firstIndex(of: object) {
+    mutating func remove(element: Element, all: Bool = false) {
+        if let index = firstIndex(of: element) {
             remove(at: index)
-            
-            return true
+        } else {
+            return
         }
         
-        return false
+        return remove(element: element, all: all)
+    }
+    
+    func count(of object: Element) -> Int {
+        var count = 0
+        
+        for element in self {
+            count = element == object ? count + 1 : count
+        }
+        
+        return count
     }
 }
 
 extension Array where Element: Comparable {
     func containsSameElements(as other: [Element]) -> Bool {
         return self.count == other.count && self.sorted() == other.sorted()
-    }
-}
-
-extension Array where Element: Numeric {
-    func average() -> Decimal? {
-        guard let decSum = Decimal(sum()) else {
-            return nil
-        }
-        
-        return decSum / Decimal(count)
     }
 }

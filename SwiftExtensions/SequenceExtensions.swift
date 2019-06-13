@@ -7,12 +7,18 @@
 
 import Foundation
 
+extension Sequence {
+    func sorted<T: Comparable>(by keyPath: KeyPath<Element, T>, _ operation: (T, T) -> Bool) -> [Element] {
+        return sorted { operation($0[keyPath: keyPath], $1[keyPath: keyPath]) }
+    }
+}
+
 extension Sequence where Element: Comparable {
     func contains(minimum: Int = 1, _ operation: (Element, Element) -> Bool, _ element: Element) -> Bool {
         var containCount = 0
         
-        for exestingElement in self {
-            if operation(exestingElement, element) {
+        for existingElement in self {
+            if operation(existingElement, element) {
                 containCount += 1
                 
                 if containCount >= minimum {
